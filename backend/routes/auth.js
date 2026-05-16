@@ -81,5 +81,7 @@ router.get('/profile', protect, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
+router.get('/', (req, res) => {
+  res.send('Auth Route Working');
+});
 module.exports = router;
