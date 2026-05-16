@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const path = require("path");
 
 dotenv.config();
@@ -10,13 +10,14 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
+// MongoDB Connection
 mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
 
+// Routes
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const cartRoutes = require("./routes/cart");
@@ -29,11 +30,14 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 
+// Frontend build folder serve
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+// Test Route
+app.get("/", (req, res) => {
+  res.send("Server Running Successfully");
 });
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
