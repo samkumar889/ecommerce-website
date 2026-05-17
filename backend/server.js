@@ -8,16 +8,31 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://your-render-domain.onrender.com'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+  .connect(process.env.MONGO_URI || 'mongodb://localhost:27017/aquaguard-ecommerce')
+  .then(() => console.log("MongoDB Connected Successfully"))
+  .catch((err) => console.log("MongoDB Connection Error:", err));
 
-// Routes
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const cartRoutes = require("./routes/cart");
@@ -30,16 +45,16 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Frontend build folder serve
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-// Test Route
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
 });

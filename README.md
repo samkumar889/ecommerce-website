@@ -1,6 +1,4 @@
-## Live Demo
-
-https://ecommerce-website-1-zvwd.onrender.com      AquaGuard E-Commerce Website
+ohhk# AquaGuard E-Commerce Website
 
 A full-stack e-commerce website for selling AquaGuard water purifiers, built with React, Node.js, Express, and MongoDB.
 
@@ -12,7 +10,7 @@ A full-stack e-commerce website for selling AquaGuard water purifiers, built wit
 - Checkout process
 - Order management
 - Admin panel for managing products and orders
-- Payment integration (Demo mode available
+- Payment integration (Demo mode available)
 
 ## Tech Stack
 
@@ -21,7 +19,55 @@ A full-stack e-commerce website for selling AquaGuard water purifiers, built wit
 - **Authentication**: JWT (JSON Web Tokens)
 - **Other**: bcryptjs for password hashing
 
-## Setup Instructions
+## Render Deployment Instructions
+
+### Step 1: Prepare Your Repository
+
+1. Create a GitHub/GitLab repository and push your code
+
+### Step 2: Deploy to Render
+
+1. Go to [Render.com](https://render.com) and sign up
+2. Click "New +" → "Web Service"
+3. Connect your GitHub repository
+4. Configure:
+   - **Name**: aquaguard-ecommerce (or your choice)
+   - **Region**: Choose your preferred region
+   - **Branch**: main (or your default branch)
+   - **Root Directory**: Leave empty
+   - **Runtime**: Node
+   - **Build Command**: 
+     ```bash
+     cd frontend && npm install && npm run build && cd ../backend && npm install
+     ```
+   - **Start Command**: 
+     ```bash
+     cd backend && npm start
+     ```
+
+### Step 3: Add Database
+
+1. In Render dashboard, click "New +" → "PostgreSQL" (or choose "MongoDB" from the marketplace)
+2. For MongoDB, you can use MongoDB Atlas:
+   - Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+   - Get your connection string
+
+### Step 4: Add Environment Variables
+
+In your Render Web Service settings, add:
+
+| Key | Value |
+|-----|-------|
+| `NODE_ENV` | `production` |
+| `PORT` | `10000` |
+| `MONGO_URI` | Your MongoDB connection string |
+| `JWT_SECRET` | Click "Generate" to create a secure secret |
+
+### Step 5: Deploy!
+
+Click "Create Web Service" and wait for deployment to complete.
+
+## Local Development
 
 ### Prerequisites
 
@@ -107,14 +153,16 @@ e commerce website/
 │   ├── middleware/    # Authentication middleware
 │   ├── .env          # Environment variables
 │   ├── server.js      # Backend entry point
+│   ├── server-demo.js # Demo server (no MongoDB needed)
 │   └── seeder.js    # Sample data seeder
-└── frontend/
-    ├── src/
-    │   ├── contexts/  # React contexts (Auth, Cart)
-    │   ├── components/ # React components
-    │   ├── pages/     # Page components
-    │   └── services/ # API services
-    └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── contexts/  # React contexts (Auth, Cart)
+│   │   ├── components/ # React components
+│   │   ├── pages/     # Page components
+│   │   └── services/ # API services
+│   └── package.json
+└── render.yaml      # Render deployment configuration
 ```
 
 ## API Endpoints

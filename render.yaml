@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: aquaguard-ecommerce
+    env: node
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        fromDatabase:
+          name: aquaguard-mongo
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+
+databases:
+  - name: aquaguard-mongo
+    databaseName: aquaguard_ecommerce
+    user: aquaguard
+    plan: free

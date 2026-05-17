@@ -74,6 +74,7 @@ const sampleProducts: Product[] = [
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(sampleProducts);
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
   const { addToCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -92,12 +93,20 @@ const Home: React.FC = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
   const handleAddToCart = async (productId: string) => {
     if (!user) {
       navigate('/login');
       return;
     }
     await addToCart(productId, 1);
+    setNotification('Item added to cart!');
   };
 
   if (loading) {
@@ -106,6 +115,11 @@ const Home: React.FC = () => {
 
   return (
     <div className="home">
+      {notification && (
+        <div className="notification">
+          {notification}
+        </div>
+      )}
       <h1>AquaGuard Water Purifiers</h1>
       <div className="products-grid">
         {products.map((product) => (

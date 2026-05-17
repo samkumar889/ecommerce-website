@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'https://ecommerce-website-3i2r.onrender.com/api';
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api' 
+  : 'http://localhost:5000/api';
 
 const api = axios.create({
   baseURL: API_URL,
